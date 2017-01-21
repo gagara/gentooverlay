@@ -1,1 +1,2 @@
-# gentooverlay -- gentoo overlay for different stuff
+# gentooverlay
+gentoo overlay for different stuff
