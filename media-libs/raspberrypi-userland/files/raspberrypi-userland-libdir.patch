@@ -1,0 +1,296 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d8ba238..fe0671e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,6 +8,8 @@ SET(PROJECT_VER_PATCH 0)
+ SET(PROJECT_VER "${PROJECT_VER_MAJOR}.${PROJECT_VER_MINOR}.${PROJECT_VER_PATCH}")
+ SET(PROJECT_APIVER "${PROJECT_VER}")
+ 
++include(GNUInstallDirs)
++
+ set(BUILD_MMAL TRUE)
+ set(BUILD_MMAL_APPS TRUE)
+ 
+@@ -123,7 +125,7 @@ if(PKG_CONFIG_FOUND)
+ 	foreach(PCFILE bcm_host.pc brcmegl.pc brcmglesv2.pc brcmvg.pc vcsm.pc mmal.pc)
+ 		configure_file("pkgconfig/${PCFILE}.in" "${PCFILE}" @ONLY)
+ 		install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/${PCFILE}"
+-			DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
++			DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+ 	endforeach()
+ endif()
+ # Remove cache entry, if one added by command line
+diff --git a/containers/CMakeLists.txt b/containers/CMakeLists.txt
+index 5570038..3578fe8 100644
+--- a/containers/CMakeLists.txt
++++ b/containers/CMakeLists.txt
+@@ -66,7 +66,7 @@ set(packetizers_SRCS ${packetizers_SRCS} ${SOURCE_DIR}/h264/avc1_packetizer.c)
+ 
+ add_library(containers ${LIBRARY_TYPE} ${core_SRCS} ${io_SRCS} ${net_SRCS} ${packetizers_SRCS})
+ target_link_libraries(containers vcos)
+-install(TARGETS containers DESTINATION lib)
++install(TARGETS containers DESTINATION ${LIBDIR})
+ 
+ set(container_readers)
+ set(container_writers)
+diff --git a/helpers/dtoverlay/CMakeLists.txt b/helpers/dtoverlay/CMakeLists.txt
+index b3bd30f..5e1a3a4 100644
+--- a/helpers/dtoverlay/CMakeLists.txt
++++ b/helpers/dtoverlay/CMakeLists.txt
+@@ -22,4 +22,4 @@ add_library (dtovl ${SHARED}
+ 
+ target_link_libraries(dtovl fdt)
+ 
+-install (TARGETS dtovl DESTINATION lib)
++install (TARGETS dtovl DESTINATION ${LIBDIR})
+diff --git a/host_applications/linux/libs/bcm_host/CMakeLists.txt b/host_applications/linux/libs/bcm_host/CMakeLists.txt
+index a863cb6..8c6c3d4 100644
+--- a/host_applications/linux/libs/bcm_host/CMakeLists.txt
++++ b/host_applications/linux/libs/bcm_host/CMakeLists.txt
+@@ -21,5 +21,5 @@ add_library(bcm_host ${SHARED} bcm_host.c
+ 
+ target_link_libraries(bcm_host vcos vchostif)
+ 
+-install(TARGETS bcm_host DESTINATION lib)
++install(TARGETS bcm_host DESTINATION ${LIBDIR})
+ 
+diff --git a/host_applications/linux/libs/debug_sym/CMakeLists.txt b/host_applications/linux/libs/debug_sym/CMakeLists.txt
+index 568837f..24e57db 100644
+--- a/host_applications/linux/libs/debug_sym/CMakeLists.txt
++++ b/host_applications/linux/libs/debug_sym/CMakeLists.txt
+@@ -11,5 +11,5 @@ include_directories (
+ add_library(debug_sym ${SHARED} debug_sym.c)
+ add_library(debug_sym_static STATIC debug_sym.c)
+ 
+-install(TARGETS debug_sym DESTINATION lib)
+-install(TARGETS debug_sym_static DESTINATION lib)
++install(TARGETS debug_sym DESTINATION ${LIBDIR})
++install(TARGETS debug_sym_static DESTINATION ${LIBDIR})
+diff --git a/host_applications/linux/libs/sm/CMakeLists.txt b/host_applications/linux/libs/sm/CMakeLists.txt
+index 5ce5aca..f85959b 100644
+--- a/host_applications/linux/libs/sm/CMakeLists.txt
++++ b/host_applications/linux/libs/sm/CMakeLists.txt
+@@ -14,5 +14,5 @@ add_library(vcsm ${SHARED} user-vcsm.c)
+ 
+ target_link_libraries(vcsm vcos)
+ 
+-install(TARGETS vcsm DESTINATION lib)
++install(TARGETS vcsm DESTINATION ${LIBDIR})
+ install(FILES user-vcsm.h DESTINATION include/interface/vcsm)
+diff --git a/interface/khronos/CMakeLists.txt b/interface/khronos/CMakeLists.txt
+index 9ad615b..9768304 100644
+--- a/interface/khronos/CMakeLists.txt
++++ b/interface/khronos/CMakeLists.txt
+@@ -78,8 +78,8 @@ target_link_libraries(GLESv2 EGL khrn_client vcos)
+ target_link_libraries(WFC EGL)
+ target_link_libraries(OpenVG EGL)
+ 
+-install(TARGETS EGL GLESv2 OpenVG WFC khrn_client DESTINATION lib)
+-install(TARGETS EGL_static GLESv2_static khrn_static DESTINATION lib)
++install(TARGETS EGL GLESv2 OpenVG WFC khrn_client DESTINATION ${LIBDIR})
++install(TARGETS EGL_static GLESv2_static khrn_static DESTINATION ${LIBDIR})
+ 
+ # recommended names to use to avoid conflicts with mesa libs
+ add_library(brcmEGL ${SHARED} ${EGL_SOURCE})
+@@ -92,4 +92,4 @@ target_link_libraries(brcmGLESv2 brcmEGL khrn_client vcos)
+ target_link_libraries(brcmWFC brcmEGL)
+ target_link_libraries(brcmOpenVG brcmEGL)
+ 
+-install(TARGETS brcmEGL brcmGLESv2 brcmOpenVG brcmWFC DESTINATION lib)
++install(TARGETS brcmEGL brcmGLESv2 brcmOpenVG brcmWFC DESTINATION ${LIBDIR})
+diff --git a/interface/mmal/CMakeLists.txt b/interface/mmal/CMakeLists.txt
+index 8208f7c..574268a 100644
+--- a/interface/mmal/CMakeLists.txt
++++ b/interface/mmal/CMakeLists.txt
+@@ -18,7 +18,7 @@ endif()
+ 
+ target_link_libraries(mmal mmal_core mmal_util mmal_vc_client vcos mmal_components)
+ 
+-install(TARGETS mmal DESTINATION lib)
++install(TARGETS mmal DESTINATION ${LIBDIR})
+ install(FILES
+    mmal.h
+    mmal_buffer.h
+diff --git a/interface/mmal/components/CMakeLists.txt b/interface/mmal/components/CMakeLists.txt
+index d65fa37..5b92909 100644
+--- a/interface/mmal/components/CMakeLists.txt
++++ b/interface/mmal/components/CMakeLists.txt
+@@ -30,5 +30,5 @@ set(container_libs ${container_libs} containers)
+ target_link_libraries(mmal_components ${container_libs} mmal_util)
+ target_link_libraries(mmal_components mmal_core)
+ 
+-install(TARGETS mmal_components DESTINATION lib)
++install(TARGETS mmal_components DESTINATION ${LIBDIR})
+ 
+diff --git a/interface/mmal/core/CMakeLists.txt b/interface/mmal/core/CMakeLists.txt
+index de0bcb2..7f1adb8 100644
+--- a/interface/mmal/core/CMakeLists.txt
++++ b/interface/mmal/core/CMakeLists.txt
+@@ -13,7 +13,7 @@ add_library (mmal_core ${LIBRARY_TYPE}
+ 
+ target_link_libraries (mmal_core vcos)
+ 
+-install(TARGETS mmal_core DESTINATION lib)
++install(TARGETS mmal_core DESTINATION ${LIBDIR})
+ install(FILES
+    mmal_buffer_private.h
+    mmal_clock_private.h
+diff --git a/interface/mmal/util/CMakeLists.txt b/interface/mmal/util/CMakeLists.txt
+index b2a6858..acabed6 100644
+--- a/interface/mmal/util/CMakeLists.txt
++++ b/interface/mmal/util/CMakeLists.txt
+@@ -12,7 +12,7 @@ add_library (mmal_util ${LIBRARY_TYPE}
+ 
+ target_link_libraries (mmal_util vcos)
+ 
+-install(TARGETS mmal_util DESTINATION lib)
++install(TARGETS mmal_util DESTINATION ${LIBDIR})
+ install(FILES
+    mmal_component_wrapper.h
+    mmal_connection.h
+diff --git a/interface/mmal/vc/CMakeLists.txt b/interface/mmal/vc/CMakeLists.txt
+index d6e80db..ecba811 100644
+--- a/interface/mmal/vc/CMakeLists.txt
++++ b/interface/mmal/vc/CMakeLists.txt
+@@ -13,7 +13,7 @@ endif(BUILD_MMAL_APPS)
+ 
+ include_directories ( ../../../host_applications/linux/libs/sm )
+ 
+-install(TARGETS mmal_vc_client DESTINATION lib)
++install(TARGETS mmal_vc_client DESTINATION ${LIBDIR})
+ install(FILES
+    mmal_vc_api.h
+    mmal_vc_api_drm.h
+diff --git a/interface/vchiq_arm/CMakeLists.txt b/interface/vchiq_arm/CMakeLists.txt
+index 7af383d..7508065 100644
+--- a/interface/vchiq_arm/CMakeLists.txt
++++ b/interface/vchiq_arm/CMakeLists.txt
+@@ -5,7 +5,7 @@ add_library(vchiq_arm SHARED
+ # pull in VCHI cond variable emulation
+ target_link_libraries(vchiq_arm vcos)
+ 
+-install(TARGETS vchiq_arm DESTINATION lib)
++install(TARGETS vchiq_arm DESTINATION ${LIBDIR})
+ #install(FILES etc/10-vchiq.rules DESTINATION /etc/udev/rules.d)
+ 
+ include_directories(../..)
+diff --git a/interface/vcos/pthreads/CMakeLists.txt b/interface/vcos/pthreads/CMakeLists.txt
+index 1d81ca3..c6a80cf 100644
+--- a/interface/vcos/pthreads/CMakeLists.txt
++++ b/interface/vcos/pthreads/CMakeLists.txt
+@@ -43,4 +43,4 @@ endif ()
+ 
+ 
+ #install(FILES ${HEADERS} DESTINATION include)
+-install(TARGETS vcos DESTINATION lib)
++install(TARGETS vcos DESTINATION ${LIBDIR})
+diff --git a/interface/vmcs_host/CMakeLists.txt b/interface/vmcs_host/CMakeLists.txt
+index 4a914a7..2ca0136 100755
+--- a/interface/vmcs_host/CMakeLists.txt
++++ b/interface/vmcs_host/CMakeLists.txt
+@@ -32,5 +32,5 @@ target_link_libraries(vchostif vchiq_arm vcos)
+ 
+ #target_link_libraries(bufman WFC)
+ 
+-install(TARGETS ${INSTALL_TARGETS} DESTINATION lib)
++install(TARGETS ${INSTALL_TARGETS} DESTINATION ${LIBDIR})
+ 
+diff --git a/makefiles/cmake/toolchains/aarch64-linux-gnu.cmake b/makefiles/cmake/toolchains/aarch64-linux-gnu.cmake
+index 56807b5..73eeaf7 100644
+--- a/makefiles/cmake/toolchains/aarch64-linux-gnu.cmake
++++ b/makefiles/cmake/toolchains/aarch64-linux-gnu.cmake
+@@ -4,9 +4,9 @@
+ #
+ 
+ SET(CMAKE_SYSTEM_NAME Linux)
+-SET(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
+-SET(CMAKE_CXX_COMPILER aarch64-linux-gnu-g++)
+-SET(CMAKE_ASM_COMPILER aarch64-linux-gnu-gcc)
++SET(CMAKE_C_COMPILER aarch64-unknown-linux-gnu-gcc)
++SET(CMAKE_CXX_COMPILER aarch64-unknown-linux-gnu-g++)
++SET(CMAKE_ASM_COMPILER aarch64-unknown-linux-gnu-gcc)
+ SET(CMAKE_SYSTEM_PROCESSOR arm)
+ 
+ #ADD_DEFINITIONS("-march=armv6")
+diff --git a/middleware/openmaxil/CMakeLists.txt b/middleware/openmaxil/CMakeLists.txt
+index 3e9c5f9..6b6c36a 100644
+--- a/middleware/openmaxil/CMakeLists.txt
++++ b/middleware/openmaxil/CMakeLists.txt
+@@ -49,4 +49,4 @@ else ()
+ 
+ endif ()
+ 
+-install (TARGETS openmaxil DESTINATION lib)
++install (TARGETS openmaxil DESTINATION ${LIBDIR})
+diff --git a/pkgconfig/bcm_host.pc.in b/pkgconfig/bcm_host.pc.in
+index c7237c5..2988b42 100644
+--- a/pkgconfig/bcm_host.pc.in
++++ b/pkgconfig/bcm_host.pc.in
+@@ -1,6 +1,6 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/include
+ 
+ Name: bcm_host
+diff --git a/pkgconfig/brcmegl.pc.in b/pkgconfig/brcmegl.pc.in
+index 5dd3d5b..a45bf22 100644
+--- a/pkgconfig/brcmegl.pc.in
++++ b/pkgconfig/brcmegl.pc.in
+@@ -1,6 +1,6 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/include
+ 
+ Name: brcmEGL
+diff --git a/pkgconfig/brcmglesv2.pc.in b/pkgconfig/brcmglesv2.pc.in
+index e0e36f5..902fbf3 100644
+--- a/pkgconfig/brcmglesv2.pc.in
++++ b/pkgconfig/brcmglesv2.pc.in
+@@ -1,6 +1,6 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/include
+ 
+ Name: brcmGLESv2
+diff --git a/pkgconfig/brcmvg.pc.in b/pkgconfig/brcmvg.pc.in
+index 763a44b..98489ee 100644
+--- a/pkgconfig/brcmvg.pc.in
++++ b/pkgconfig/brcmvg.pc.in
+@@ -1,6 +1,6 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/include
+ 
+ Name: brcmOpenVG
+diff --git a/pkgconfig/mmal.pc.in b/pkgconfig/mmal.pc.in
+index 37d344c..1ffa4f5 100644
+--- a/pkgconfig/mmal.pc.in
++++ b/pkgconfig/mmal.pc.in
+@@ -1,6 +1,6 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/include
+ 
+ Name: MMAL
+diff --git a/pkgconfig/vcsm.pc.in b/pkgconfig/vcsm.pc.in
+index b12c56f..6f762cb 100644
+--- a/pkgconfig/vcsm.pc.in
++++ b/pkgconfig/vcsm.pc.in
+@@ -1,6 +1,6 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+ includedir=${prefix}/include
+ 
+ Name: VCSM
