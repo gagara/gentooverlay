@@ -4,7 +4,7 @@
 
 description="Containerd container runtime"
 command="/usr/bin/containerd"
-command_args="--root=/var/lib/${RC_SVCNAME} --state=/run/${RC_SVCNAME} --address=/run/${RC_SVCNAME}/${RC_SVCNAME}.sock ${command_args:-}"
+command_args="${command_args:-}"
 command_background="true"
 pidfile="${pidfile:-/run/${RC_SVCNAME}.pid}"
 start_stop_daemon_args="--stderr /var/log/${RC_SVCNAME}/${RC_SVCNAME}.log --stdout /var/log/${RC_SVCNAME}/${RC_SVCNAME}.log"
@@ -22,5 +22,5 @@ start_pre() {
 }
 
 start_post() {
-	ewaitfile ${containerd_socket_delay:-5} /run/${RC_SVCNAME}/${RC_SVCNAME}.sock
+	ewaitfile ${containerd_socket_delay:-5} ${containerd_socket_address:-/run/containerd/containerd.sock}
 }
