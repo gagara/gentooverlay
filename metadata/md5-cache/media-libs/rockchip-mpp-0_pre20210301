@@ -1,0 +1,12 @@
+BDEPEND=app-alternatives/ninja >=dev-build/cmake-3.20.5
+DEFINED_PHASES=compile configure install prepare test
+DESCRIPTION=Rockchip Media Process Platform (MPP)
+EAPI=7
+HOMEPAGE=https://github.com/rockchip-linux/mpp
+INHERIT=cmake flag-o-matic
+KEYWORDS=~arm64
+LICENSE=Apache-2.0
+SLOT=0
+SRC_URI=https://github.com/rockchip-linux/mpp/archive/9ec098a9819ca13e1ff245d4f7cb945c6c06a276.tar.gz -> rockchip-mpp-0_pre20210301.tar.gz
+_eclasses_=cmake	b05c1b7b3c9213c155f128f4eadaa49f	flag-o-matic	e8de74bac929ba17427e740e95707d00	multiprocessing	1e32df7deee68372153dca65f4a7c21f	ninja-utils	2df4e452cea39a9ec8fb543ce059f8d6	toolchain-funcs	f9d71a6efe9d083aec750dd13968e169	xdg-utils	42869b3c8d86a70ef3cf75165a395e09
+_md5_=f79b3d2d889114b66d8f2550ab42a8a5
