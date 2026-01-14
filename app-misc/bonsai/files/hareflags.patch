@@ -1,0 +1,17 @@
+diff --git a/Makefile b/Makefile
+index 4447137..66dee6b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -15,10 +15,10 @@ THIRDPARTYDIR=$(HARESRCDIR)/third-party
+ all: bonsaid bonsaictl
+ 
+ bonsaid:
+-	hare build -o $@ cmd/$@/
++	hare build $(HAREFLAGS) -o $@ cmd/$@/
+ 
+ bonsaictl:
+-	hare build -o $@ cmd/$@/
++	hare build $(HAREFLAGS) -o $@ cmd/$@/
+ 
+ check:
+ 	hare test
