@@ -20,7 +20,13 @@ fi
 
 LICENSE="GPL-3"
 
-RDEPEND=""
+RDEPEND="
+	app-misc/jq
+	app-admin/superd
+	gui-apps/swaybg
+	sys-fs/inotify-tools
+	x11-misc/xdg-user-dirs
+"
 DEPEND="${RDEPEND}"
 BDEPEND="
 	app-text/scdoc

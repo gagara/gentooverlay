@@ -10,12 +10,12 @@ HOMEPAGE="https://sxmo.org/"
 
 SRC_URI="
 	https://git.sr.ht/~anjan/mnc/archive/${PV}.tar.gz -> ${P}.tar.gz
-	https://github.com/gagara/gentooverlay/releases/download/mnc-0.5-vendor/${P}-vendor.tar.xz"
+	https://github.com/gagara/gentooverlay/releases/download/${P}-vendor/${P}-vendor.tar.xz"
 
 SLOT="0/${PV}"
 KEYWORDS="~amd64 ~arm ~arm64"
 
-LICENSE="Unlicense"
+LICENSE="MIT Unlicense"
 
 RDEPEND=""
 DEPEND="${RDEPEND}"
