@@ -17,7 +17,9 @@ KEYWORDS="~amd64 ~arm ~arm64"
 
 LICENSE="Apache-2.0 BSD GPL-3 MIT Unlicense"
 
-RDEPEND=""
+RDEPEND="
+	x11-misc/dunst
+"
 DEPEND="${RDEPEND}"
 BDEPEND="
 "

@@ -23,8 +23,15 @@ LICENSE="GPL-3"
 RDEPEND="
 	app-misc/jq
 	app-admin/superd
+	app-admin/doas
+	app-admin/conky
 	gui-apps/swaybg
+	gui-apps/swayidle
+	gui-apps/wob
+	gui-apps/wlopm
+	media-libs/libpulse
 	sys-fs/inotify-tools
+	sys-power/upower
 	x11-misc/xdg-user-dirs
 "
 DEPEND="${RDEPEND}"
