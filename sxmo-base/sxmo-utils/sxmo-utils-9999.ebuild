@@ -33,6 +33,7 @@ RDEPEND="
 	sys-fs/inotify-tools
 	sys-power/upower
 	x11-misc/xdg-user-dirs
+	x11-libs/xcb-util-errors
 "
 DEPEND="${RDEPEND}"
 BDEPEND="
