@@ -1,0 +1,22 @@
+#!/sbin/openrc-run
+# Copyright 1999-2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+description="Quectel EG25 modem"
+command="/usr/bin/eg25manager"
+command_args="${command_args:-}"
+command_background="true"
+pidfile="${pidfile:-/run/${RC_SVCNAME}.pid}"
+start_stop_daemon_args="--stderr /var/log/${RC_SVCNAME}/${RC_SVCNAME}.log --stdout /var/log/${RC_SVCNAME}/${RC_SVCNAME}.log"
+
+depend() {
+	use net
+	before NetworkManager
+	after logger
+}
+
+start_pre() {
+	checkpath -m 0750 -d "/var/log/${RC_SVCNAME}"
+
+	return 0
+}
