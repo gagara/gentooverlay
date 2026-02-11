@@ -3,7 +3,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 description="Quectel EG25 modem"
-command="/usr/bin/eg25manager"
+command="/usr/bin/eg25-manager"
 command_args="${command_args:-}"
 command_background="true"
 pidfile="${pidfile:-/run/${RC_SVCNAME}.pid}"
