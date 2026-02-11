@@ -20,7 +20,6 @@ SLOT="0"
 
 DEPEND="
 	sys-apps/autologin
-	gui-libs/display-manager-init
 "
 RDEPEND="${DEPEND}"
 
@@ -30,10 +29,4 @@ PATCHES=(
 
 src_compile() {
 	return
-}
-
-src_install() {
-	default
-
-	dobin ${FILESDIR}/tinydm-run-session-autologin
 }
