@@ -22,6 +22,7 @@ RDEPEND="
 	x11-misc/wayout
 	app-misc/pnc
 	media-fonts/nerdfonts[X,adwaitamono,dejavusansmono,liberationmono]
+	dev-libs/bemenu
 	userscripts? ( sxmo-base/sxmo-userscripts )
 	feedback? ( app-accessibility/clickclack )
 	screenlocker? ( x11-misc/peanutbutter )
