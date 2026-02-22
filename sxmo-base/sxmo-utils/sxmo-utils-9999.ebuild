@@ -25,6 +25,7 @@ RDEPEND="
 	app-admin/superd
 	app-admin/doas
 	app-admin/conky
+	app-misc/brightnessctl
 	gui-apps/swaybg
 	gui-apps/swayidle
 	gui-apps/wob
