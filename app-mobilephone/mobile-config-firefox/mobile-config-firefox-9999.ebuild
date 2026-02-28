@@ -23,3 +23,15 @@ RDEPEND="
 DEPEND="${RDEPEND}"
 BDEPEND="
 "
+
+PATCHES=(
+	"${FILESDIR}"/install.patch
+)
+
+src_install() {
+	local makeargs=(
+		DESTDIR=${D}
+		FIREFOX_DIR=usr/lib64/firefox
+	)
+	emake "${makeargs[@]}" install
+}

@@ -1,0 +1,17 @@
+diff --git a/Makefile b/Makefile
+index 0d7e140..1e53fa1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -9,10 +9,10 @@ dummy:
+ 	@echo "Running 'make' is not needed anymore, just do 'sudo make install'."
+ 
+ install:
+-	src/prepare_install.sh "$(FIREFOX_DIR)" "$(DESTDIR)"
++	#src/prepare_install.sh "$(FIREFOX_DIR)" "$(DESTDIR)"
+ 	# Firefox Policies
+ 	install -Dm644 src/policies.json \
+-		"$(DESTDIR)/$(FIREFOX_DIR)/distribution/policies.json"
++		"$(DESTDIR)/etc/firefox/policies/policies.json"
+ 	# Mobile Config Firefox
+ 	install -Dm644 src/mobile-config-prefs.js \
+ 		"$(DESTDIR)/$(FIREFOX_DIR)/defaults/pref/mobile-config-prefs.js"
