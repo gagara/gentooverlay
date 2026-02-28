@@ -1,0 +1,45 @@
+#!/bin/bash
+
+#
+# @see https://wiki.gentoo.org/wiki/Embedded_Handbook/General/Compiling_with_QEMU_user_chroot
+#
+# 1. check that symlink to profile is absolute:
+# /usr/<target>/etc/portage/make.profile -> /var/db/repos/gentoo/profiles/default/linux/arm64/23.0
+#
+# 2. run `ldconfig` after first login
+#
+# 3. use `chroot-emerge`, `chroot-equery` aliases inside chroot
+#
+
+AARCH64_ROOT=${1:-/usr/aarch64-unknown-linux-gnu}
+
+[[ -d ${AARCH64_ROOT} ]] || (echo "error: invalid root '${AARCH64_ROOT}'" >&2; exit 1)
+
+/etc/init.d/qemu-binfmt start
+
+# copy qemu to target env
+cp /usr/bin/qemu-aarch64 ${AARCH64_ROOT}/usr/bin
+
+cd ${AARCH64_ROOT}
+
+mount -t proc none proc
+mount -o bind /dev dev
+mount -o bind /sys sys
+mount -o bind /var/db/repos var/db/repos
+mount -o bind /lib/modules lib/modules
+mount -o bind /var/tmp/portage var/tmp/portage
+mount -o bind /var/cache/distfiles var/cache/distfiles
+
+cp /etc/resolv.conf etc/resolv.conf
+echo "alias chroot-emerge=\"ROOT=/ PKGDIR=/var/cache/binpkgs/ CBUILD=aarch64-unknown-linux-gnu HOSTCC=aarch64-unknown-linux-gnu-gcc HOSTCXX=aarch64-unknown-linux-gnu-g++ emerge\"" > etc/bash/bashrc.d/99-emerge-chroot.bash
+echo "alias chroot-equery=\"ROOT=/ PORTAGE_CONFIGROOT=/ equery\"" >> etc/bash/bashrc.d/99-emerge-chroot.bash
+
+chroot . /bin/bash --login
+
+umount var/cache/distfiles
+umount var/tmp/portage
+umount lib/modules
+umount var/db/repos
+umount sys
+umount dev
+umount proc

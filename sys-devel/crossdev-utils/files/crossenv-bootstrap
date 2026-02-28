@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#
+# Howto: 
+# 1. mount sdcard to /mnt/gentoo
+# 2. source this script
+# 3. use aliases crossenv-emerge, crossenv-equery, etc
+# 4. unmount repos bind mounts
+#
+
+CE_ROOT=${1:-/mnt/gentoo/}
+
+export CE_ROOT
+
+alias crossenv-emerge="ROOT=${CE_ROOT} SYSROOT=${CE_ROOT} PORTDIR=/var/db/repos/gentoo PKGDIR=${CE_ROOT}var/cache/binpkgs DISTDIR=${CE_ROOT}var/cache/distfiles MAKEOPTS='-j12' aarch64-unknown-linux-gnu-emerge"
+alias crossenv-equery="ROOT=${CE_ROOT} equery"
+alias crossenv-aarch64-make="make ARCH=\"arm64\" CROSS_COMPILE=\"aarch64-unknown-linux-gnu-\" INSTALL_PATH=\"${CE_ROOT}boot\" INSTALL_MOD_PATH=\"${CE_ROOT}\" INSTALL_DTBS_PATH=\"${CE_ROOT}boot/dtbs\" DTC_FLAGS=\"-@\""
+
+export PS1="(crossenv:${CE_ROOT}) ${PS1}"
+
+cat <<EOF
+
+ * Use crossenv-* aliases now.
+
+>> If target env has additional repositories defined, then consider bind-mount them to /var/db/repos
+Example:
+mkdir -p /var/db/repos/genpi64
+mount -o bind /mnt/genpi/var/db/repos/genpi64/ /var/db/repos/genpi64
+EOF
