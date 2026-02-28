@@ -1,0 +1,13 @@
+#!/sbin/openrc-run
+# Copyright 1999-2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+description="USB tethering"
+command="/usr/lib/usb-tethering/setup.sh"
+command_args="${command_args:-}"
+
+depend() {
+	use net
+	before NetworkManager dhcpd
+	after logger
+}
