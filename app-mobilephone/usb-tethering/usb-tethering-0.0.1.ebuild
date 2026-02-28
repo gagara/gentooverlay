@@ -20,9 +20,8 @@ BDEPEND="
 
 src_install() {
 	newinitd "${FILESDIR}"/${PN}.initd "${PN}"
-	#dodir /usr/lib/${PN}
-	insinto /usr/lib/${PN}
-	doins "${FILESDIR}"/setup.sh
+	exeinto /usr/lib/${PN}
+	newexe "${FILESDIR}"/setup.sh setup
 	insinto /usr/lib/sysctl.d
 	newins "${FILESDIR}"/${PN}.sysctl "10-${PN}.conf"
 }
@@ -30,6 +29,6 @@ src_install() {
 pkg_postinst() {
 	elog "You may need to configure dhcp for interface usb0."
 	elog "Make sure masquerading is enabled in postrouting chain of NAT table."
-	elog "It can be done with:"
-	elog "iptables -t nat -A POSTROUTING -s 10.15.19.0/24 -j MASQUERADE"
+	elog "For example, if subnet of usb0 is 192.168.128.0/24:"
+	elog "iptables -t nat -A POSTROUTING -s 192.168.128.0/24 -j MASQUERADE"
 }

@@ -30,7 +30,7 @@ setup_usb_network_configfs() {
 	usb_serialnumber="${deviceinfo_usb_serialnumber:-postmarketOS}"
 	usb_rndis_function="${deviceinfo_usb_rndis_function:-rndis.usb0}"
 
-	echo "  Setting up an USB gadget through configfs"
+	#echo "  Setting up an USB gadget through configfs"
 	# Create an usb gadet configuration
 	mkdir $CONFIGFS/g1 || echo "  Couldn't create $CONFIGFS/g1"
 	echo "$usb_idVendor"  > "$CONFIGFS/g1/idVendor"
@@ -87,5 +87,5 @@ modprobe libcomposite
 setup_usb_network_configfs
 
 # setup network interface
-ip address add 10.15.19.82/24 dev usb0
+ip address add 192.168.128.1/24 dev usb0
 ip link set usb0 up

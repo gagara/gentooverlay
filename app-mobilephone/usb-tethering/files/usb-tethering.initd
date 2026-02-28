@@ -3,11 +3,15 @@
 # Distributed under the terms of the GNU General Public License v2
 
 description="USB tethering"
-command="/usr/lib/usb-tethering/setup.sh"
+command="/usr/lib/usb-tethering/setup"
 command_args="${command_args:-}"
 
 depend() {
 	use net
 	before NetworkManager dhcpd
 	after logger
+}
+
+stop() {
+    return 0
 }
