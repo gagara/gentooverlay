@@ -85,7 +85,3 @@ setup_usb_network_configfs() {
 modprobe libcomposite
 
 setup_usb_network_configfs
-
-# setup network interface
-ip address add 192.168.128.1/24 dev usb0
-ip link set usb0 up

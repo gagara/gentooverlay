@@ -7,8 +7,7 @@ command="/usr/lib/usb-tethering/setup"
 command_args="${command_args:-}"
 
 depend() {
-	use net
-	before NetworkManager dhcpd
+	before NetworkManager net dhcpd
 	after logger
 }
 
