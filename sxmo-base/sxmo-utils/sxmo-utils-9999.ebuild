@@ -26,6 +26,7 @@ RDEPEND="
 	app-admin/doas
 	app-admin/conky
 	app-misc/brightnessctl
+	dev-tcltk/expect
 	gui-apps/swaybg
 	gui-apps/swayidle
 	gui-apps/wob
