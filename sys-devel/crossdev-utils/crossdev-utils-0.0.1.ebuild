@@ -21,4 +21,5 @@ BDEPEND="
 src_install() {
 	dobin "${FILESDIR}"/chroot-aarch64
 	dobin "${FILESDIR}"/crossenv-bootstrap
+	dobin "${FILESDIR}"/crossenv-kernel-pkg
 }

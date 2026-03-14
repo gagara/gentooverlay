@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# USAGE: `$0` <kernel-version>
+# example `$0` 6.15.3-pinephone
+# uses $CE_ROOT env variable to search for files
+
+if [ "$1" == "" ]; then
+    echo "USAGE: $0 <kernel-version>"
+    exit 1
+fi
+
+KV=$1
+
+tar -C ${CE_ROOT} -cvzf kernel-dist-${KV}.tar.gz boot/ lib/modules/${KV}
