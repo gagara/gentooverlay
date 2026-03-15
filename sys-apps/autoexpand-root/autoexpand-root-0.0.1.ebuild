@@ -24,6 +24,7 @@ RDEPEND="${DEPEND}
 	systemd?  ( >=sys-apps/systemd-249.7 )
 	!systemd? ( >=sys-apps/openrc-0.44.10 )
 	>=app-shells/bash-5.1_p8
+	>=sys-block/parted-3.6
 	>=sys-fs/btrfs-progs-6.19"
 
 src_install() {

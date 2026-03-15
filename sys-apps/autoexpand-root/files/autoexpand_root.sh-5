@@ -6,11 +6,13 @@
 # Checks for a sentinel file "dont_autoexpand_root" on /boot
 # and will proceed only if not found.
 
-SENTINEL="/boot/dont_autoexpand_root"
+SENTINEL="/boot/.dont_autoexpand_root"
+PROBE_FILE="/.autoexpand_root_probe_$(tr -dc A-Za-z0-9 </dev/urandom | head -c 5)"
+
 if [ -f "${SENTINEL}" ]; then
 	# sentinel found, service should really be disabled
 	echo "Sentinel file detected; consider deleting ${SVCNAME} from boot runlevel"
-	return 0
+	exit 0
 fi
 
 # Find the partition mounted as / according to the kernel
@@ -25,7 +27,7 @@ PNUM="$(egrep -o "[0-9]+$" <<<"${ROOTPART}")"
 # Ensure we get some kind of data from the above
 if [[ -z "${ROOTPART}" || -z "${ROOTFS}" || -z "${ROOTDRIVE}" || -z "${PNUM}" ]]; then
 	echo "Unable to determine root path components"
-	return 1
+	exit 1
 fi
 
 # first boot, need to resize root partition to fill disk
@@ -38,13 +40,14 @@ echo "* Auto resizing root partition to fill block device - please wait *"
 echo "*******************************************************************"
 echo ""
 
-touch "${SENTINEL}"
-if ! [ -f "${SENTINEL}" ]; then
+touch "${PROBE_FILE}"
+if ! [ -f "${PROBE_FILE}" ]; then
 	# might mean an ro filesystem, and we don't want an
 	# infinite loop
-	echo "Failed to delete sentinel file '${SENTINEL}'"
-	return 1
+	echo "Failed to create probe file '${PROBE_FILE}' at root filesystem"
+	exit 1
 fi
+rm -f ${PROBE_FILE}
 
 # turn off swapfiles, for safety
 swapoff -a
@@ -52,39 +55,42 @@ swapoff -a
 # sync filesystems before we begin, to minimize any damage if things go wrong
 if ! sync &>/dev/null; then
 	echo "Failed to sync to disk"
-	return 1
+	exit 1
 fi
 
 # begin by resizing the root partition
 if ! sfdisk --no-reread --no-tell-kernel -N ${PNUM} <<<", +" "${ROOTDRIVE}" &>/dev/null; then
 	echo "Failed to resize root partition"
-	return 1
+	exit 1
 fi
 
 # Tell the kernel about the change. Seperate for sake of logging
 if ! partprobe "${ROOTPART}" &>/dev/null; then
 	echo "Failed to read root partition change"
-	return 1
+	exit 1
 fi
 
 # Do an online resize of the root partition file system
 if [ "${ROOTFS}" = "btrfs" ]; then
 	if ! btrfs filesystem resize max "/" &>/dev/null; then
 		echo "Failed to resize root filesystem"
-		return 1
+		exit 1
 	fi
 else
 	if ! resize2fs -f "${ROOTPART}" &>/dev/null; then
 		echo "Failed to resize root filesystem"
-		return 1
+		exit 1
 	fi
 fi
 
 # Flush everything to disk
 if ! sync &>/dev/null; then
 	echo "Failed to sync to disk"
-	return 1
+	exit 1
 fi
+
+# Now create sentinel file to skip resizing next time
+touch ${SENTINEL}
 
 # Swap is OK to use again
 swapon -a
