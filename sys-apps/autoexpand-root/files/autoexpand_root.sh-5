@@ -11,8 +11,7 @@ PROBE_FILE="/.autoexpand_root_probe_$(tr -dc A-Za-z0-9 </dev/urandom | head -c 5
 
 if [ -f "${SENTINEL}" ]; then
 	# sentinel found, service should really be disabled
-	echo "Sentinel file detected; consider deleting ${SVCNAME} from boot runlevel"
-	exit 0
+	exit 2
 fi
 
 # Find the partition mounted as / according to the kernel
@@ -65,7 +64,7 @@ if ! sfdisk --no-reread --no-tell-kernel -N ${PNUM} <<<", +" "${ROOTDRIVE}" &>/d
 fi
 
 # Tell the kernel about the change. Seperate for sake of logging
-if ! partprobe "${ROOTPART}" &>/dev/null; then
+if ! partprobe "${ROOTDRIVE}" &>/dev/null; then
 	echo "Failed to read root partition change"
 	exit 1
 fi

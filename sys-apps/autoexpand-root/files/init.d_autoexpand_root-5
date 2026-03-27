@@ -19,5 +19,9 @@ depend() {
 start() {
 	ebegin "Starting ${SVCNAME}"
 	/boot/autoexpand_root.sh
+	if [ $? = 2 ]; then
+		ewarn "Sentinel file detected; consider deleting ${SVCNAME} from boot runlevel"
+		eend 0
+	fi
 	eend $?
 }
